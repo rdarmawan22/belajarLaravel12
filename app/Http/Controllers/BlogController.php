@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\DB;
 
 class BlogController extends Controller 
 {
-    function index(){
-        $blogs = DB::table('blogs')->get();
+    function index(Request $request){
+        $title  = $request->title;
+        $blogs = DB::table('blogs')->where('title', 'LIKE', '%'.$title.'%')->paginate(10);
+        return view('blog', ['blogs' => $blogs, 'title' => $title]);
         // return $blogs;
-        return view('blog', ['data' => $blogs]);
         // return 'sesuatu';
     }
 }
