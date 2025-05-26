@@ -12,6 +12,10 @@
         <div class="mt-5">
             <h1 class="text-center">halaman blog</h1>
             <div class="table-responsive">
+                <a href="{{ url('/blog/add') }}" class="btn btn-primary mb-3">Add New</a>
+                @if (Session::has('message'))
+                    <p class="alert alert-success">{{ Session::get('message') }}</p>                    
+                @endif
                 <form method="GET">
                     <div class="input-group mb-3">
                         <input type="text" name="title" class="form-control" aria-describedby="button-addon2" value="{{ $title }}">
@@ -22,8 +26,8 @@
                     <thead>
                         <th>No</th>
                         <th>Title</th>
-                        <th>Action</th>
                         <th>Description</th>
+                        <th>Action</th>
                     </thead>
                     <tbody>
                         @if ($blogs->count()==0)
