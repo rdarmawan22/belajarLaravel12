@@ -38,7 +38,7 @@
                         @foreach ($blogs as $blog)
                             <tr>
                                 <td>{{ ($blogs ->currentpage()-1) * $blogs ->perpage() + $loop->index + 1 }}</td>
-                                <td>{{ $blog->title }}</td>
+                                <td><a href="{{ url('blog/'.$blog->id.'/detail') }}">{{ $blog->title }}</a></td>
                                 <td>{{ $blog->description }}</td>
                                 <td>edit</td>
                             </tr>

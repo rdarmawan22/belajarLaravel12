@@ -24,7 +24,7 @@ class BlogController extends Controller
         $request->validate([
             'title' => 'required|unique:blogs|max:255',
             'description' => 'required'
-        ]);
+        ]); 
 
         DB::table('blogs')->insert([
             'title' => $request->title,
@@ -34,6 +34,11 @@ class BlogController extends Controller
         Session::flash('message', 'add new blog success');
 
         return redirect()->route('blog');
+    }
+
+    function show($id){
+        $blog = DB::table('blogs')->where('id', $id)->first();
+        return view('blog-detail',['blog' => $blog]);
     }
 }
 ?>
