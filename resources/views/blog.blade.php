@@ -23,11 +23,11 @@
                     </div>
                 </form>
                 <table class="table">
-                    <thead>
+                    <thead class="text-center">
                         <th>No</th>
                         <th>Title</th>
                         <th>Description</th>
-                        <th>Action</th>
+                        <th colspan="2">Action</th>
                     </thead>
                     <tbody>
                         @if ($blogs->count()==0)
@@ -40,7 +40,8 @@
                                 <td>{{ ($blogs ->currentpage()-1) * $blogs ->perpage() + $loop->index + 1 }}</td>
                                 <td><a href="{{ url('blog/'.$blog->id.'/detail') }}">{{ $blog->title }}</a></td>
                                 <td>{{ $blog->description }}</td>
-                                <td>edit</td>
+                                <td><a href="{{ url('blog/'.$blog->id.'/edit') }}">edit</a></td>
+                                <td><a href="{{ url('blog/'.$blog->id.'/delete') }}">delete</a></td>
                             </tr>
                         @endforeach
                     </tbody>
