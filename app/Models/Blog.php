@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Blog extends Model
 {
-    use HasFactory, Notifiable;
-    //
+    use HasFactory, Notifiable, SoftDeletes;
+    
+    protected $fillable = [
+        'title', 'description'
+    ];
 }

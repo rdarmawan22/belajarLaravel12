@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -8,11 +9,19 @@ use Illuminate\Support\Facades\Session;
 class BlogController extends Controller 
 {
     function index(Request $request){
-        $title  = $request->title;
-        $blogs = DB::table('blogs')->where('title', 'LIKE', '%'.$title.'%')->orderBy('id', 'desc')->paginate(10);
+        // $title  = $request->title;
+        // $blogs = DB::table('blogs')->where('title', 'LIKE', '%'.$title.'%')->orderBy('id', 'desc')->paginate(10);
+        // return view('blog', ['blogs' => $blogs, 'title' => $title]);
+
+        //Eloquent ORM Methode
+        $title = $request->title;
+
+        //untuk menampilkan data di softdeletes
+        // $blogs = Blog::where('title', 'LIKE', '%'.$title.'%')->withTrashed()->orderBy('id', 'desc')->paginate(10); 
+
+        $blogs = Blog::where('title', 'LIKE', '%'.$title.'%')->orderBy('id', 'desc')->paginate(10); 
         return view('blog', ['blogs' => $blogs, 'title' => $title]);
-        // return $blogs;
-        // return 'sesuatu';
+
     }
 
     function add(){
@@ -26,10 +35,11 @@ class BlogController extends Controller
             'description' => 'required'
         ]); 
 
-        DB::table('blogs')->insert([
-            'title' => $request->title,
-            'description' => $request->description
-        ]);
+        // DB::table('blogs')->insert([
+        //     'title' => $request->title,
+        //     'description' => $request->description
+        // ]);
+        Blog::create($request->all());
 
         Session::flash('message', 'add new blog success');
 
@@ -37,18 +47,15 @@ class BlogController extends Controller
     }
 
     function show($id){
-        $blog = DB::table('blogs')->where('id', $id)->first();
-        if(!$blog){
-            abort(404);
-        }
+        $blog = Blog::findOrFail($id);
+        // if(!$blog){
+            //     abort(404);
+            // }
         return view('blog-detail',['blog' => $blog]);
     }
 
     function edit($id){
-        $blog = DB::table('blogs')->where('id', $id)->first();
-        if(!$blog){
-            abort(404);
-        }
+        $blog = Blog::findOrFail($id);
         return view('blog-edit',['blog' => $blog]);
     }
     
@@ -59,10 +66,8 @@ class BlogController extends Controller
             'description' => 'required'
         ]); 
 
-        DB::table('blogs')->where('id', $id)->update([
-            'title' => $request->title,
-            'description' =>$request->description
-        ]);
+        $blog = Blog::findOrFail($id);
+        $blog->update($request->all());
 
         Session::flash('message', 'edit new blog success');
 
@@ -70,11 +75,17 @@ class BlogController extends Controller
     }
 
     function delete($id){
-        $blog = DB::table('blogs')->where('id', $id)->delete();
+        // $blog = DB::table('blogs')->where('id', $id)->delete();
+
+        Blog::findOrFail($id)->delete();
 
         Session::flash('message', 'delete blog success');
 
         return redirect()->route('blog');
+    }
+
+    function restore($id){
+        $blog = Blog::withTrashed()->findOrFail($id)->restore();
     }
 }
 ?>
